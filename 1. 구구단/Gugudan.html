@@ -2,9 +2,6 @@
   <head>
     <meta charset="UTF-8" />
     <title>구구단</title>
-  </head>
-  <body>
-    <div id="root"></div>
     <script
       crossorigin
       src="https://unpkg.com/react@16/umd/react.development.js"
@@ -14,34 +11,38 @@
       src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
     ></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
+  </head>
+  <body>
+    <div id="root"></div>
+    <!--setState, ref를 쓰지 않는 컴포넌트는 함수컴포넌트로 만들어 씀-->
     <script type="text/babel">
-      "use strict";
       const GuGuDan = () => {
+        //컴포넌트 안에 꼭 넣어주기
+        //{중괄호 안에 스크립트 쓸 수 있음}
+        //use 붙은걸 hooks라고 함
         const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
         const [second, setSecond] = React.useState(
           Math.ceil(Math.random() * 9)
         );
-        const [value, setValue] = React.useState("");
-        const [result, setResult] = React.useState("");
-        const inputEl = React.useRef(null);
-
+        const [value, setValue] = React.useState();
+        const [result, setResult] = React.useState();
+        const inputRef = React.useRef(null);
+        const onChangeInput = (e) => {
+          setValue(e.target.value);
+        };
         const onSubmitForm = (e) => {
           e.preventDefault();
           if (parseInt(value) === first * second) {
-            setResult("정답:");
+            setResult("정답:" + value);
             setFirst(Math.ceil(Math.random() * 9));
             setSecond(Math.ceil(Math.random() * 9));
             setValue("");
-            inputEl.current.focus();
+            inputRef.current.focus();
           } else {
             setResult("땡");
             setValue("");
-            inputEl.current.focus();
+            inputRef.current.focus();
           }
-        };
-        const onChange = (e) => {
-          setValue(e.target.value);
         };
         return (
           <React.Fragment>
@@ -49,15 +50,10 @@
               {first} 곱하기 {second}는?
             </div>
             <form onSubmit={onSubmitForm}>
-              <input
-                ref={inputEl}
-                type="number"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
+              <input onChange={onChangeInput} value={value} ref={inputRef} />
               <button>입력!</button>
             </form>
-            <div id="result">{result}</div>
+            <div>{result}</div>
           </React.Fragment>
         );
       };
@@ -67,3 +63,4 @@
     </script>
   </body>
 </html>
+<!--구조 분해: const [first, setFirst] => 변수 자리에 객체, 배열 쓰는 것-->
